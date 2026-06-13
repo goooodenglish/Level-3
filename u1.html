@@ -1,0 +1,167 @@
+HTML
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文句子隨選發音工具</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, "Microsoft JhengHei", sans-serif;
+            line-height: 1.8;
+            padding: 40px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        /* 嚴格保留記事本的換行、空格與分段 */
+        .content-area {
+            white-space: pre-wrap; 
+            font-size: 19px;
+            word-wrap: break-word;
+            letter-spacing: 0.5px;
+        }
+        /* 純圖示喇叭按鈕樣式 */
+        .audio-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 50%; /* 圓形按鈕 */
+            width: 28px;
+            height: 28px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .audio-btn:hover {
+            background-color: #357ABD;
+            transform: scale(1.05);
+        }
+        /* 播放中（暫停狀態）的按鈕樣式 */
+        .audio-btn.playing {
+            background-color: #E056FD; /* 播放時變成亮紫色，方便識別 */
+        }
+        .audio-btn.playing:hover {
+            background-color: #be2edd;
+        }
+
+        /* =======================================================
+           📱 手機版專屬優化 (RWD)
+           當螢幕寬度小於 600px 時自動啟用以下樣式
+           ======================================================= */
+        @media (max-width: 600px) {
+            body {
+                padding: 12px; /* 縮小網頁最外圈的留白 */
+            }
+            .container {
+                padding: 20px 15px; /* 縮小白色容器的內襯，大幅增加文字可用寬度 */
+                border-radius: 8px;
+            }
+            .content-area {
+                font-size: 17px; /* 稍微縮小字體，避免單字過長一直斷行 */
+                line-height: 1.6;
+            }
+            .audio-btn {
+                width: 26px;  /* 微調按鈕大小，更適合手機手指點擊 */
+                height: 26px;
+                font-size: 12px;
+                margin-left: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content-area">
+L3U1(=1)
+1. award 
+(1)	"I can't believe I got an award!" 
+(2)	"Wow, that little boy won an award!" 
+(3)	The school gave her an award for her kind help to other students. 
+(4)	He received an award for saving a child from the river. 
+(5)	Winning this award was a proud moment for me and my family. 
+(6)	This award reminds me that hard work can bring great results. 
+獎項、獎
+(1)	我不敢相信我得獎了！ 
+(2)	哇，那個小男孩得獎了！ 
+(3)	學校頒發一個獎給她，因為她熱心幫助其他學生。 
+(4)	他因為從河裡救了一個孩子而獲得一個獎。 
+(5)	贏得這個獎是我和家人感到驕傲的時刻。 
+(6)	這個獎提醒我，努力付出能帶來很好的成果。
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const contentArea = document.querySelector('.content-area');
+    let rawText = contentArea.innerText;
+
+    // 精準抓取英文句子的正規表達式（含引號開頭優化）
+    const englishRegex = /([A-Z"][A-Za-z\s,.'’"!?-]{8,}[.!?]"?)/g;
+
+    // 將英文句子替換成帶有發音按鈕的 HTML
+    const processedHtml = rawText.replace(englishRegex, (match) => {
+        const cleanText = match.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ").trim();
+        return `${match}<button class="audio-btn" onclick="toggleSpeech('${cleanText}', this)" title="發音">🔊</button>`;
+    });
+
+    contentArea.innerHTML = processedHtml;
+});
+
+let currentUtterance = null;
+let currentButton = null;
+
+function toggleSpeech(text, button) {
+    if (window.speechSynthesis.speaking && currentButton === button) {
+        window.speechSynthesis.cancel();
+        resetButton(button);
+        return;
+    }
+
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        if (currentButton) resetButton(currentButton);
+    }
+
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'en-US'; 
+    currentButton = button;
+
+    button.innerHTML = '⏸';
+    button.classList.add('playing');
+
+    currentUtterance.onend = () => {
+        resetButton(button);
+    };
+
+    currentUtterance.onerror = () => {
+        resetButton(button);
+    };
+
+    window.speechSynthesis.speak(currentUtterance);
+}
+
+function resetButton(button) {
+    button.innerHTML = '🔊';
+    button.classList.remove('playing');
+    currentUtterance = null;
+    currentButton = null;
+}
+</script>
+
+</body>
+</html>

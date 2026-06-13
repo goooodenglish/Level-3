@@ -1,1 +1,137 @@
-<h1>Hello World</h1>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 3 主導覽頁</title>
+    <style>
+        /* 基礎全域設定 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 30px 15px;
+            text-align: center;
+        }
+
+        /* 第一行：純文字標題（無法點擊） */
+        h1 {
+            font-size: 2.5rem;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+
+        /* 標題下方的副標題（已修改文字） */
+        .subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+            margin-bottom: 35px;
+        }
+
+        /* 40個按鈕的容器：設定大螢幕下一行 8 個 */
+        .grid-container {
+            display: grid;
+            /* 預設在寬螢幕下，平均分配成 8 欄 */
+            grid-template-columns: repeat(8, 1fr);
+            gap: 15px;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* 按鈕基本樣式 */
+        .unit-btn {
+            display: block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 18px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+        }
+
+        /* 滑鼠移過去時的視覺效果 */
+        .unit-btn:hover {
+            background-color: #0056b3;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* 按鈕點下去那一瞬間的壓低效果 */
+        .unit-btn:active {
+            background-color: #004085;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(1px);
+        }
+
+        /* 額外加上：如果是手機等窄螢幕，自動調整每行數量，避免按鈕被擠扁 */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(4, 1fr); /* 平板尺寸改為一行 4 個 */
+            }
+        }
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: repeat(3, 1fr); /* 手機尺寸改為一行 3 個 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Level 3</h1>
+    <div class="subtitle">請選擇要聽的單元</div>
+
+    <div class="grid-container">
+        <a href="u1.html" class="unit-btn">U1</a>
+        <a href="u2.html" class="unit-btn">U2</a>
+        <a href="u3.html" class="unit-btn">U3</a>
+        <a href="u4.html" class="unit-btn">U4</a>
+        <a href="u5.html" class="unit-btn">U5</a>
+        <a href="u6.html" class="unit-btn">U6</a>
+        <a href="u7.html" class="unit-btn">U7</a>
+        <a href="u8.html" class="unit-btn">U8</a>
+        
+        <a href="u9.html" class="unit-btn">U9</a>
+        <a href="u10.html" class="unit-btn">U10</a>
+        <a href="u11.html" class="unit-btn">U11</a>
+        <a href="u12.html" class="unit-btn">U12</a>
+        <a href="u13.html" class="unit-btn">U13</a>
+        <a href="u14.html" class="unit-btn">U14</a>
+        <a href="u15.html" class="unit-btn">U15</a>
+        <a href="u16.html" class="unit-btn">U16</a>
+        
+        <a href="u17.html" class="unit-btn">U17</a>
+        <a href="u18.html" class="unit-btn">U18</a>
+        <a href="u19.html" class="unit-btn">U19</a>
+        <a href="u20.html" class="unit-btn">U20</a>
+        <a href="u21.html" class="unit-btn">U21</a>
+        <a href="u22.html" class="unit-btn">U22</a>
+        <a href="u23.html" class="unit-btn">U23</a>
+        <a href="u24.html" class="unit-btn">U24</a>
+        
+        <a href="u25.html" class="unit-btn">U25</a>
+        <a href="u26.html" class="unit-btn">U26</a>
+        <a href="u27.html" class="unit-btn">U27</a>
+        <a href="u28.html" class="unit-btn">U28</a>
+        <a href="u29.html" class="unit-btn">U29</a>
+        <a href="u30.html" class="unit-btn">U30</a>
+        <a href="u31.html" class="unit-btn">U31</a>
+        <a href="u32.html" class="unit-btn">U32</a>
+        
+        <a href="u33.html" class="unit-btn">U33</a>
+        <a href="u34.html" class="unit-btn">U34</a>
+        <a href="u35.html" class="unit-btn">U35</a>
+        <a href="u36.html" class="unit-btn">U36</a>
+        <a href="u37.html" class="unit-btn">U37</a>
+        <a href="u38.html" class="unit-btn">U38</a>
+        <a href="u39.html" class="unit-btn">U39</a>
+        <a href="u40.html" class="unit-btn">U40</a>
+    </div>
+
+</body>
+</html>

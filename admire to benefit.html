@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文句子隨選發音工具</title>
+    <style>
+        /* 讓平滑滾動效果更舒適 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: "Segoe UI", Arial, "Microsoft JhengHei", sans-serif;
+            line-height: 1.8;
+            padding: 40px;
+            padding-top: 85px; /* 為頂部固定的 Word List 導覽列預留空間 */
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* =======================================================
+           📌 頂部固定 Word List 導覽列樣式 (去掉了 Word List: 字樣)
+           ======================================================= */
+        #jump-nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 12px 20px;
+            box-sizing: border-box;
+            z-index: 9999;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background-color: #e1f5fe;
+            color: #0288d1;
+            border: 1px solid #b3e5fc;
+            padding: 4px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover, .nav-btn:active {
+            background-color: #0288d1;
+            color: white;
+            border-color: #0288d1;
+        }
+
+        /* 錨點目標的高亮與粗體樣式 */
+        .jump-target {
+            scroll-margin-top: 105px; /* 防止跳轉時文字被頂部導覽列擋住 */
+            display: inline-block;
+            font-weight: bold; /* 大項數字標題顯示粗體 */
+        }
+
+        /* 返回頂部的文字鏈接樣式 */
+        .back-to-top-link {
+            font-size: 14px;
+            color: #4A90E2;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: normal;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .back-to-top-link:hover {
+            text-decoration: underline;
+            color: #357ABD;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        /* 嚴格保留記事本的換行、空格與分段 */
+        .content-area {
+            white-space: pre-wrap; 
+            font-size: 19px;
+            word-wrap: break-word;
+            letter-spacing: 0.5px;
+        }
+        
+        /* 純圖示喇叭按鈕樣式 */
+        .audio-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .audio-btn:hover {
+            background-color: #357ABD;
+            transform: scale(1.05);
+        }
+        /* 播放中（暫停狀態）的按鈕樣式 */
+        .audio-btn.playing {
+            background-color: #E056FD;
+        }
+        .audio-btn.playing:hover {
+            background-color: #be2edd;
+        }
+
+        /* =======================================================
+           📱 手機版專屬優化 (RWD)
+           ======================================================= */
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+                padding-top: 110px;
+            }
+            #jump-nav-bar {
+                padding: 8px 12px;
+                gap: 6px;
+            }
+            .nav-btn {
+                padding: 3px 10px;
+                font-size: 13px;
+            }
+            .back-to-top-link {
+                margin-left: 10px;
+                font-size: 13px;
+            }
+            .container {
+                padding: 20px 15px;
+                border-radius: 8px;
+            }
+            .content-area {
+                font-size: 17px;
+                line-height: 1.6;
+            }
+            .audio-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 12px;
+                margin-left: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="jump-nav-bar"></div>
+
+<div class="container">
+    <div class="content-area">
+1. admire
+   (1) "I really admire my dad."
+   (2) "Who do you admire the most?"
+   (3) Many people admire her for helping others.
+   (4) Students admire the teacher's kindness and patience.
+   (5) The young artist is admired for her amazing work.
+   欽佩,讚賞
+   (1)「我真的很欽佩我的爸爸。」
+   (2)「你最欽佩誰？」
+   (3) 許多人因為她幫助別人而欽佩她。
+   (4) 學生們讚賞老師的善良和耐心。
+   (5) 這位年輕藝術家因她驚人的作品而受到讚賞。
+   [vt.] to respect and like someone because they have done something good or because they have special qualities.
+   Word Family：│admirable [adj.] 值得欽佩的，令人讚賞的。admiration [U] 欽佩，讚賞。
+
+2-1.advertise
+(1) "They advertise new phones online."
+(2) "Where can I advertise my old bike?"
+(3) Companies advertise products by using TV and websites.
+(4) The store advertised its sale to attract more customers.
+(5) Many companies advertise their services through social media.
+登廣告,宣傳
+(1)「他們在網路上宣傳新手機。」
+(2)「我可以在哪裡為我的舊腳踏車登廣告？」
+(3) 公司藉由使用電視和網站來宣傳產品。
+(4) 那家商店宣傳它的特價活動以吸引更多顧客。
+(5) 許多公司透過社群媒體宣傳它們的服務。
+[vt.] to tell people about a product, job, service, or event in order to make them want to buy, use, or know about it.
+Word Family：│advertiser [C] 廣告商，登廣告者。advertisement [C] 廣告。
+
+2-2.advertisement
+(1) "I saw an advertisement online."
+(2) "Did you see that funny advertisement?"
+(3) He put an advertisement in the newspaper for a job.
+(4) The advertisement shows how useful the new phone is.
+(5) A good advertisement can change the way people think about a product.
+廣告
+(1)「我在網路上看到一則廣告。」
+(2)「你看到那個有趣的廣告了嗎？」
+(3) 他在報紙上刊登了一則工作的廣告。
+(4) 那則廣告展示了新手機有多麼有用。
+(5) 一個好的廣告可以改變人們看待產品的方式。
+[C] a notice, picture, or short film that tells people about a product, job, or service and tries to persuade them to buy or use it.
+Word Family：advertise [vt.] 登廣告，宣傳。advertiser [C] 廣告商，登廣告者。
+
+2-3.advertising
+(1) "Advertising is everywhere today."
+(2) "Is advertising important for business?"
+(3) The company spends money on advertising every year.
+(4) Advertising plays an important role in modern business.
+(5) Online advertising has become a powerful way to reach customers around the world.
+廣告業
+(1)「現在廣告業無處不在。」
+(2)「廣告業對商業重要嗎？」
+(3) 這家公司每年花錢在廣告上。
+(4) 廣告業在現代商業中扮演重要角色。
+(5) 網路廣告已成為接觸全世界顧客的一種強大方式。
+[U] the activity or business of creating advertisements and making people notice products, services, or events.
+Word Family：│advertise [vt.] 登廣告，宣傳。advertisement [C] 廣告。
+
+3.anxious
+(1) "I feel anxious before exams."
+(2) "Are you anxious about the test?"
+(3) She is anxious to know the result.
+(4) Many students feel anxious when they face big changes.
+(5) The anxious parents waited for news from their missing child.
+擔心的，焦慮的
+(1)「考試前我感到焦慮。」
+(2)「你對考試感到擔心嗎？」
+(3) 她急切想知道結果。
+(4) 當面對重大改變時，許多學生感到焦慮。
+(5) 焦慮的父母等待失蹤孩子的消息。
+[adj.] worried or nervous about something that may happen, or wanting something very much.
+Word Family：anxiety [U] 焦慮，擔心。anxiously [adv.] 焦慮地，擔心地。
+
+4.benefit
+(1) "Exercise has many benefits."
+(2) "What benefits do you get from reading?"
+(3) We can benefit from learning new skills.
+(4) A healthy diet brings many benefits to our bodies.
+(5) The benefits of technology have changed the way people live.
+益處
+(1)「運動有許多益處。」
+(2)「閱讀可以帶給你什麼益處？」
+(3) 我們可以從學習新技能中獲益。
+(4) 健康飲食為我們的身體帶來許多益處。
+(5) 科技的益處已改變人們生活的方式。
+usu. [C] a good effect or advantage that something has for someone or something.
+Word Family：beneficial [adj.] 有益的，有利的。benefit [vt.] 使受益，得益於。
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const contentArea = document.querySelector('.content-area');
+    const rawText = contentArea.innerText;
+
+    const lines = rawText.split('\n');
+    const wordItemMap = {}; 
+    const numberList = []; 
+    const processedLines = [];
+
+    const itemHeaderRegex = /^(\d+(?:-\d+)?)\.\s*(.*)$/;
+    const englishSentenceRegex = /([A-Z"][A-Za-z\s,.'’"!?-]{8,}[.!?]"?)/g;
+
+    let sentenceCounterForCurrentWord = 0; 
+
+    lines.forEach((line) => {
+        const trimmedLine = line.trim();
+        const match = trimmedLine.match(itemHeaderRegex);
+
+        if (match) {
+            sentenceCounterForCurrentWord = 0;
+
+            const num = match[1];        
+            const restOfLine = match[2]; 
+            numberList.push(num);
+            wordItemMap[num] = restOfLine.trim();
+
+            const cleanWord = restOfLine.replace(/'/g, "\\'").replace(/"/g, "&quot;").trim();
+
+            processedLines.push(
+                `<span id="jump-target-${num}" class="jump-target">${num}. ${restOfLine}</span>` +
+                `<button class="audio-btn" id="word-speech-btn-${num}" onclick="speakWordHeader('${num}', this)" title="發音 (美式)">🔊</button>` +
+                `<a class="back-to-top-link" onclick="scrollToWordList()">Back to Top</a>`
+            );
+        } else if (trimmedLine.includes('Word Family：')) {
+            // 處理 Word Family 行：排除 [ ] 區塊，語速設為 0.88
+            let wfIndex = line.indexOf('Word Family：');
+            let wfPrefix = line.substring(0, wfIndex + 'Word Family：'.length);
+            let wfContent = line.substring(wfIndex + 'Word Family：'.length);
+
+            let resultHtml = wfPrefix;
+            let parts = wfContent.split(/(\[[^\]]*\])/g);
+
+            parts.forEach(part => {
+                if (part.startsWith('[') && part.endsWith(']')) {
+                    resultHtml += part;
+                } else {
+                    let replaced = part.replace(/\b([A-Za-z]+)\b/g, (wMatch) => {
+                        const cleanW = wMatch.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        return `${wMatch}<button class="audio-btn" onclick="toggleSpeech('${cleanW}', this, 'en-US', 0.88)" title="發音">🔊</button>`;
+                    });
+                    resultHtml += replaced;
+                }
+            });
+
+            processedLines.push(resultHtml);
+        } else {
+            let lineWithAudio = line.replace(englishSentenceRegex, (sentenceMatch) => {
+                sentenceCounterForCurrentWord++;
+                
+                let lang = 'en-US'; 
+                let titleText = '發音 (美式)';
+
+                if (sentenceCounterForCurrentWord === 3) {
+                    lang = 'en-GB';
+                    titleText = '發音 (英式)';
+                }
+
+                const cleanText = sentenceMatch.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ").trim();
+                return `${sentenceMatch}<button class="audio-btn" onclick="toggleSpeech('${cleanText}', this, '${lang}')" title="${titleText}">🔊</button>`;
+            });
+
+            processedLines.push(lineWithAudio);
+        }
+    });
+
+    contentArea.innerHTML = processedLines.join('\n');
+    window.wordItemMap = wordItemMap;
+
+    // --- 動態建立頂部的 Word List 按鈕 (去除 Word List: 標題) ---
+    const navBar = document.getElementById('jump-nav-bar');
+    
+    if (numberList.length > 0) {
+        numberList.forEach(num => {
+            const btn = document.createElement('button');
+            btn.className = 'nav-btn';
+            btn.innerText = num;
+            btn.onclick = () => {
+                // 1. 跳轉到該單字 (精確露出頂部)
+                const targetEl = document.getElementById(`jump-target-${num}`);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                // 2. 同時播放該單字的發音
+                const targetAudioBtn = document.getElementById(`word-speech-btn-${num}`);
+                speakWordHeader(num, targetAudioBtn);
+            };
+            navBar.appendChild(btn);
+        });
+    } else {
+        navBar.style.display = 'none';
+        document.body.style.paddingTop = '40px';
+    }
+});
+
+function scrollToWordList() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+let currentUtterance = null;
+let currentButton = null;
+
+// 手機端喚醒與解鎖語音功能 (iOS / Android)
+function initIOSVoice() {
+    if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance('');
+        u.volume = 0;
+        window.speechSynthesis.speak(u);
+    }
+}
+
+function speakWordHeader(num, button) {
+    const rawWord = window.wordItemMap[num] || "";
+    if (!rawWord) return;
+    const cleanWord = rawWord.replace(/'/g, "\\'").replace(/"/g, "&quot;").trim();
+    toggleSpeech(cleanWord, button, 'en-US', 0.95);
+}
+
+// 📌 升級版：判斷是否為語調上揚的問句
+function isRisingIntonationQuestion(text) {
+    // 先移除兩端的空白與開頭可能的雙引號
+    const clean = text.trim().replace(/^["'「」]+/, '');
+    
+    // 必須以問號結尾
+    if (!clean.endsWith('?')) return false;
+
+    // 1. 檢查是否以常見助動詞/Be動詞開頭 (包含 Could, Would, Should, Might, Must 等)
+    const auxStartRegex = /^(Are|Is|Am|Was|Were|Do|Does|Did|Have|Has|Had|Can|Could|Will|Would|Shall|Should|May|Might|Must)\b/i;
+    
+    // 2. 檢查是否以 Wh- 類或 How 降調疑問詞開頭 (Who, What, Where, When, Why, How 等)
+    const whStartRegex = /^(Who|Whom|Whose|What|Which|Where|When|Why|How)\b/i;
+
+    // 如果符合助動詞開頭，或者「非 Wh-/How 開頭」的問句（如附加問句/反問句），皆判定為升調
+    if (auxStartRegex.test(clean)) {
+        return true;
+    }
+    
+    return !whStartRegex.test(clean);
+}
+
+function toggleSpeech(text, button, lang = 'en-US', customRate = 0.95) {
+    if (!('speechSynthesis' in window)) {
+        alert("抱歉，您的裝置不支援發音功能。");
+        return;
+    }
+
+    if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+    }
+    
+    initIOSVoice();
+
+    if (window.speechSynthesis.speaking && currentButton === button) {
+        window.speechSynthesis.cancel();
+        resetButton(button);
+        return;
+    }
+
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        if (currentButton) resetButton(currentButton);
+    }
+
+    // 📌 行動裝置與電腦端 Yes/No 升調語調優化處理：
+    let processText = text;
+    let pitchValue = 1.0;
+
+    if (isRisingIntonationQuestion(text)) {
+        pitchValue = 1.35; // 電腦端：提高 Pitch 音調
+        // 手機端：將結尾的問號替換為 ?! 強制讓 iOS/Android 原生 TTS 引擎發出明顯的上揚尾音
+        processText = text.replace(/\?["']?$/, '?!');
+    }
+
+    currentUtterance = new SpeechSynthesisUtterance(processText);
+    currentUtterance.lang = lang; 
+    currentUtterance.rate = customRate; 
+    currentUtterance.pitch = pitchValue;
+
+    currentButton = button;
+
+    if (button) {
+        button.innerHTML = '⏸';
+        button.classList.add('playing');
+    }
+
+    currentUtterance.onend = () => {
+        resetButton(button);
+    };
+
+    currentUtterance.onerror = (event) => {
+        if (event.error !== 'interrupted') {
+            resetButton(button);
+        }
+    };
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(currentUtterance);
+}
+
+function resetButton(button) {
+    if (!button) return;
+    button.innerHTML = '🔊';
+    button.classList.remove('playing');
+    currentUtterance = null;
+    currentButton = null;
+}
+</script>
+
+</body>
+</html>
